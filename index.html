@@ -125,7 +125,6 @@
     .drop-indicator{height:4px;background:var(--accent);border-radius:2px;margin:-6px 0;display:none;transition:all .15s}
     .drop-indicator.visible{display:block}
 
-
     .proj-widget-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
     .timeframe-tabs{display:flex;gap:4px;flex-wrap:wrap}
     .tf-btn{padding:4px 10px;border-radius:var(--radius-sm);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);transition:all .15s}
@@ -328,7 +327,11 @@
     .color-reset-btn{font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:2px 6px;border-radius:4px}
     .color-reset-btn:hover{color:var(--red);background:var(--red-bg)}
     .color-panel{display:none}
-    .color-panel.active{display:block}
+    .color-panel.active{display:block}      padding: 0 1rem;
+      height: 52px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
@@ -431,14 +434,24 @@
           <span class="widget-handle-label">Asset &amp; Income Charts</span>
           <span class="widget-handle-icon">⠿⠿</span>
         </div>
-        <div class="grid-1-2" style="margin-bottom:0">
-          <div class="card">
-            <div class="card-title">Asset Allocation</div>
-            <div class="chart-wrap" id="donut-wrap">
-              <canvas id="assetDonut" role="img" aria-label="Asset allocation donut chart"></canvas>
-              <div class="chart-empty" id="donut-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;display:none">No assets yet</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="card">
+              <div class="card-title">Asset Allocation</div>
+              <div class="chart-wrap" id="donut-wrap">
+                <canvas id="assetDonut" role="img" aria-label="Asset allocation donut chart"></canvas>
+                <div class="chart-empty" id="donut-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;display:none">No assets yet</div>
+              </div>
+              <div id="donut-legend" style="margin-top:12px"></div>
             </div>
-            <div id="donut-legend" style="margin-top:12px"></div>
+            <div class="card">
+              <div class="card-title">Debt Breakdown</div>
+              <div class="chart-wrap" id="debt-donut-wrap">
+                <canvas id="debtDonut" role="img" aria-label="Debt breakdown donut chart"></canvas>
+                <div class="chart-empty" id="debt-donut-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;display:none">No debts yet</div>
+              </div>
+              <div id="debt-donut-legend" style="margin-top:12px"></div>
+            </div>
           </div>
           <div class="card">
             <div class="card-title">Income vs. Expenses by Category</div>
@@ -474,19 +487,9 @@
           <span class="widget-handle-label">Debt Overview</span>
           <span class="widget-handle-icon">⠿⠿</span>
         </div>
-        <div class="grid-1-2" style="margin-bottom:0">
-          <div class="card">
-            <div class="card-title">Debt Breakdown</div>
-            <div class="chart-wrap" id="debt-donut-wrap">
-              <canvas id="debtDonut" role="img" aria-label="Debt breakdown donut chart"></canvas>
-              <div class="chart-empty" id="debt-donut-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;display:none">No debts yet</div>
-            </div>
-            <div id="debt-donut-legend" style="margin-top:12px"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Debt Progress</div>
-            <div id="ov-debt-list"><div class="empty">No debts tracked yet.</div></div>
-          </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-title">Debt Progress</div>
+          <div id="ov-debt-list"><div class="empty">No debts tracked yet.</div></div>
         </div>
       </div>
 
@@ -514,7 +517,6 @@
           <div id="savings-target-display"></div>
         </div>
       </div>
-
 
       <div class="drop-indicator" id="di-5c"></div>
 
@@ -661,7 +663,6 @@
     <div class="card"><div id="expense-list"><div class="empty">No expenses yet.</div></div></div>
   </div>
 
-
   <!-- DEBTS -->
   <div class="tab-section" id="tab-debts">
     <div class="page-header">
@@ -707,8 +708,6 @@
     </div>
   </div>
 </div>
-
-
 
   <!-- ABOUT -->
   <div class="tab-section" id="tab-about">
@@ -778,7 +777,6 @@
 
     </div>
   </div>
-
 
 <!-- COLOR SETTINGS MODAL -->
 <div class="modal-overlay" id="color-modal-overlay" onclick="closeColorSettingsOnOverlay(event)">
@@ -1351,7 +1349,6 @@
     }).join('') + `<div style="padding-top:10px;display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-faint)">${data.debts.length} debt${data.debts.length===1?'':'s'}</span><span style="font-family:'Playfair Display',serif;font-size:14px;color:var(--red)">${fmt(data.debts.reduce((s,d)=>{const p=d.payments.reduce((a,x)=>a+x.amount,0);return s+Math.max(0,d.total-p);},0))} remaining</span></div>`;
   }
 
-
   // ── LAYOUT DRAG & DROP ────────────────────────────────────
   let layoutLocked = true;
   let dragSrc = null;
@@ -1470,10 +1467,6 @@
       });
     });
   }
-
-
-
-
 
   // ── CATEGORY COLORS ───────────────────────────────────────
   const DEFAULT_COLORS = {
@@ -1732,7 +1725,6 @@
     renderNWProjection();
   }
 
-
   function toggleDebtInProjection() {
     projIncludeDebt = !projIncludeDebt;
     const btn = document.getElementById('debt-toggle-btn');
@@ -1896,8 +1888,6 @@
     renderDebts();
     renderCharts();
   }
-
-
 
   // ── DEBTS ─────────────────────────────────────────────────
   function addDebt() {
@@ -2175,8 +2165,6 @@
       </div>`;
     }).join('');
   }
-
-
 
   // ── EXTRA PAYMENT SIMULATOR ───────────────────────────────
   function toggleSimulator(id) {
